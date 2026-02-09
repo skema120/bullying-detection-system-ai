@@ -1,0 +1,314 @@
+{% load static %}
+
+  <footer class="main-footer">
+    <strong>Copyright &copy; <a href="mailto:message@sjit.edu.ph">1971-2025</a>.</strong>
+    All rights reserved.
+
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+ 
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <script>
+        // Use SweetAlert without require
+        Swal.fire({
+          title: "{{ "Thank You" }}",
+          text: "{{ message }}",
+          icon: "success",
+          confirmButtonText: "Confirm",
+        });
+      </script>
+    {% endfor %}
+  </ul>
+{% endif %} -->
+
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <script>
+        // Use SweetAlert without require
+        {% if message.tags == "success" %}
+          Swal.fire({
+            title: "{{ "Success" }}",
+            html: "{{ message|safe }}",
+            icon: "success",
+            confirmButtonText: "Confirm",
+          });
+        {% elif message.tags == "error" %}
+          Swal.fire({
+            title: "{{ "Error" }}",
+            text: "{{ message }}",
+            icon: "error",
+            confirmButtonText: "Confirm",
+          });
+        {% endif %}
+      </script>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+<!-- jQuery -->
+<script src="{% static 'webs/plugins/jquery/jquery.min.js' %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static 'webs/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'webs/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- ChartJS -->
+<script src="{% static 'webs/plugins/chart.js/Chart.min.js' %}"></script>
+<!-- Sparkline -->
+<script src="{% static 'webs/plugins/sparklines/sparkline.js' %}"></script>
+<!-- JQVMap -->
+<!-- <script src="{% static 'webs/plugins/jqvmap/jquery.vmap.min.js' %}"></script>
+<script src="{% static 'webs/plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script> -->
+<!-- jQuery Knob Chart -->
+<script src="{% static 'webs/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
+<!-- InputMask -->
+<script src="{% static 'webs/plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'webs/plugins/inputmask/jquery.inputmask.min.js' %}"></script>
+<!-- date-range-picker -->
+<script src="{% static 'webs/plugins/daterangepicker/daterangepicker.js' %}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'webs/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- Summernote -->
+<script src="{% static 'webs/plugins/summernote/summernote-bs4.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'webs/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+
+<!-- DataTables  & Plugins -->
+<script src="{% static 'webs/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'webs/plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'webs/plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'webs/plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'webs/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+
+<!-- Select2 -->
+<script src="{% static 'webs/plugins/select2/js/select2.full.min.js' %}"></script>
+
+<!-- AdminLTE App -->
+<script src="{% static 'webs/dist/js/adminlte.min.js' %}"></script>
+
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'webs/dist/js/demo.js' %}"></script>
+
+
+<script>
+  toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": true,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  };
+  
+$('.btn-get-data').on("click", function(){
+        $.ajax({
+            url: $(this).data('url'),
+            type: "GET",
+            success: function(data){
+              var resetPasswordUrl = data.reset_password_url;
+              $('#resetPasswordLink').attr('href', resetPasswordUrl);
+              $('#username').text(data.username);
+              $('#default_password').text(data.default_password);
+              $('#viewAuth_Details').modal('show');
+
+            },
+            error: function(data){
+                alert("Error: Something went wrong!");
+            }
+        });
+    });
+   
+
+
+// Get all submit buttons and required input fields in the document
+const submitBtns = document.querySelectorAll('button[type="submit"]');
+const requiredFields = document.querySelectorAll('input[required], select[required]');
+
+// Add an event listener to each submit button
+submitBtns.forEach(function(submitBtn) {
+  submitBtn.addEventListener('click', function(event) {
+    // Check if all required fields are filled
+    let isFormValid = true;
+    requiredFields.forEach(function(field) {
+      if (!field.value) {
+        isFormValid = false;
+      }
+    });
+
+    // If the form is valid, submit the form and disable the submit button
+    if (isFormValid) {
+      const form = submitBtn.form;
+      form.submit();
+      submitBtn.disabled = true;
+    }
+  });
+});
+
+
+  $(function () {
+
+    $("#example1").DataTable({
+      "responsive": true, 
+      "lengthChange": false, 
+      "autoWidth": false,
+      "order": [[0, 'desc']], // Sort by the first column in descending order
+      "buttons": [
+        "copy", "csv", "excel", "pdf",
+       // "print", 
+       {
+            extend: 'print',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+       "colvis"
+       ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+      "buttons": [
+        "copy", "csv", "excel", "pdf",
+       // "print", 
+       {
+            extend: 'print',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+       "colvis"
+       ]
+    }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
+
+    $("#example3").DataTable({
+      "pageLength": 5,
+      "lengthChange": false,
+      "responsive": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "buttons": [
+        "copy", "csv", "excel", "pdf", 
+        // "print", 
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        "colvis"
+        ]
+    }).buttons().container().appendTo('#example3_wrapper .col-md-6:eq(0)');
+
+    $("#example4").DataTable({
+      "pageLength": 5,
+      "lengthChange": false,
+      "responsive": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+    }).buttons().container().appendTo('#example3_wrapper .col-md-6:eq(0)');
+
+
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+
+
+     //Date picker
+    $('#reservationdate').datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+
+
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+      // Apply form-control class to password fields
+      var password1 = document.getElementById('id_password1');
+      var password2 = document.getElementById('id_password2');
+
+      if (password1 && password2) {
+        password1.classList.add('form-control');
+        password2.classList.add('form-control');
+      }
+    });
+
+
+   $(document).ready(function() {
+    // Apply form-control class to the element with name "old_password"
+    $('[name="old_password"]').addClass('form-control');
+    $('[name="new_password1"]').addClass('form-control');
+    $('[name="new_password2"]').addClass('form-control');
+
+
+  });
+</script>
+
+<!-- <script type="text/javascript">
+  let idleTime = 0;
+
+  // Increment the idle time counter every minute
+  let idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+  // Reset the idle timer on any event (mouse movement, key press, scroll, etc.)
+  window.onload = resetTimer;
+  window.onmousemove = resetTimer;
+  window.onkeypress = resetTimer;
+  window.onscroll = resetTimer;
+
+  function timerIncrement() {
+    idleTime += 1;
+    if (idleTime >= 5) { // 5 minutes of inactivity
+      window.location.href = "{% url 'logout' %}"; // Redirect to logout
+    }
+  }
+
+  function resetTimer() {
+    idleTime = 0; // Reset the timer when the user is active
+  }
+</script> -->
+
+</body>
+</html>

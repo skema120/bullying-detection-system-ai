@@ -1,0 +1,124 @@
+{% extends 'app/includes/base.html' %}
+{% block content %}
+{% if user.is_superuser %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Users</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Users</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Users List</h3>
+      </div>
+      <div class="card-header">
+        <button type="button" class="btn btn-success" onclick="window.location.href='{% url "register-user" %}'">ADD</button>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Username</th>
+              <th>Date Joined</th>
+              <th>Last Login</th>
+              <th>Admin Status</th>
+              <th>Staff Status</th>
+              <th>Active Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody> 
+          {% for user in userlist %}
+            <tr>
+              <td>{{ user.first_name }}</td>
+              <td>{{ user.last_name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.date_joined }}</td>
+              <td>{{ user.last_login }}</td>
+
+               <td>
+              {% if user.is_superuser == 1 %}
+                <span class="badge bg-success">YES</span>
+              {% elif user.is_superuser == 0 %}
+                <span class="badge bg-danger">NO</span>
+              {% endif %}
+              </td>
+
+               <td>
+              {% if user.is_staff == 1 %}
+                <span class="badge bg-success">YES</span>
+              {% elif user.is_staff == 0 %}
+                <span class="badge bg-danger">NO</span>
+              {% endif %}
+              </td>
+
+              <td>
+              {% if user.is_active == 1 %}
+                <span class="badge bg-success">ACTIVE</span>
+              {% elif user.is_active == 0 %}
+                <span class="badge bg-danger">INACTIVE</span>
+              {% endif %}
+              </td>
+
+              <td>
+                <a title="Edit User" href="{% url 'show-userinfo' user.id %}" class="btn btn-secondary"><i class="align-middle me-0 fas fa-edit"></i></a>
+              
+                <a title="Change Password" href="{% url 'password-change' user.id %}" class="btn btn-warning fa-passwd-reset fa-stack">
+                <i class="align-middle me-0 fas fa-undo fa-stack-2x"></i>
+                <i class=" align-middle me-0 fas fa-lock fa-stack-1x"></i> 
+                </a>
+
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper --> 
+{% else %}
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header">
+          <!-- Optionally, you can display a message or redirect users without privileges -->
+          <div class="alert alert-warning" role="alert">
+            You do not have permission to view this page.
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endif %}
+{% endblock %}

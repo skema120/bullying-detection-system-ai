@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="shortcut icon" href="{% static 'webs/dist/img/logo.png' %}" />
+  <title>BULLYING DETECTION SYSTEM | {{ page_title }}</title>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'webs/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'webs/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/jqvmap/jqvmap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'webs/dist/css/adminlte.min.css' %}">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/daterangepicker/daterangepicker.css' %}">
+  <!-- summernote -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/summernote/summernote-bs4.min.css' %}">
+
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/select2/css/select2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'webs/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+   <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="{% static 'webs/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- Include jQuery first -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<style>
+
+  input[type="checkbox"] {
+
+  /* For iOS < 15 */
+  background-color: var(--form-background);
+  /* Not removed via appearance */
+  margin: 0;
+
+  font: inherit;
+  color: currentColor;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid currentColor;
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+
+  display: grid;
+  place-content: center;
+}
+
+
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+input[type="checkbox"]:focus {
+  outline: max(2px, 0.15em) solid currentColor;
+  outline-offset: max(2px, 0.15em);
+}
+
+input[type="checkbox"]:disabled {
+  --form-control-color: var(--form-control-disabled);
+
+  color: var(--form-control-disabled);
+  cursor: not-allowed;
+}
+
+.errorlist{
+      color: #ff0000;
+    }
+
+    .custom-alert {
+        background-color: #ffc107;
+        color: #333;
+        border: 1px solid #ffc107;
+    }
+
+    .custom-alert .alert-message {
+        margin-right: 10px;
+    }
+
+
+  .fa-passwd-reset > .fa-lock {
+  font-size: 0.80rem;
+}
+.fa-passwd-reset > .fa-undo {
+  font-size: 1.40rem;
+}
+
+</style>
+<script>
+  
+  window.onload = function() {
+    var passwordInput = document.getElementById("id_password");
+    var passwordLabel = document.querySelector("label[for='id_password']");
+    var helpText = document.querySelector(".helptext");
+
+    passwordInput.parentNode.removeChild(passwordInput);
+    passwordLabel.parentNode.removeChild(passwordLabel);
+    helpText.parentNode.removeChild(helpText);
+  };
+  
+</script>
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="{% static 'webs/dist/img/logo.png' %}" alt="Logo" height="60" width="60">
+  </div>

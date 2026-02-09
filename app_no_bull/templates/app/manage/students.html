@@ -1,0 +1,135 @@
+{% extends 'app/includes/base.html' %} 
+{% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Students</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Students</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Students List</h3>
+      </div>
+      <div class="card-header">
+         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">Add Student</button>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table id="students-table" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Last Name</th>
+              <th>Department</th>
+              <th>Course</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    <!-- Modal Add -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Add Student</h5>
+        <button type="button" class="btn btn-tool" data-dismiss="modal">
+                <i class="fas fa-times"></i>
+        </button>
+         </div>
+          <form action="{% url 'add_student' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %} 
+            <div class="modal-body">
+              {{studform.as_p}}
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- END Modal -->
+
+
+
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper --> 
+
+<!-- Include DataTables Script -->
+<script>
+  $(document).ready(function() {
+    // Initialize DataTable
+    var table = $('#students-table').DataTable({
+      "autoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+        "url": "{% url 'students-data' %}",  // URL for AJAX request
+        "type": "GET"
+      },
+      "columns": [
+        {"data": 0},  // Student ID
+        {"data": 1},  // First Name
+        {"data": 2},  // Middle Name
+        {"data": 3},  // Last Name
+        {"data": 4},  // Department
+        {"data": 5},  // Course
+        {"data": 6},  // Action Buttons
+      ]
+    });
+
+  });
+</script>
+
+
+
+<style>
+    .disabled-link {
+    color: #black; /* Set the text color to a grayish tone */
+    pointer-events: none; /* Disable pointer events to make it unclickable */
+    opacity: 0.6; /* Set opacity to visually indicate it's disabled */
+    cursor: not-allowed; /* Change the cursor to indicate it's not clickable */
+}
+  </style>
+
+  <script>
+    $(document).ready(function(){
+        $(".disabled-link").click(function(e){
+            e.preventDefault(); // Prevent the default click action
+        });
+    });
+</script>
+
+{% endblock %}
+

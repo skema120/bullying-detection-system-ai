@@ -1,0 +1,137 @@
+{% extends 'app/includes/base.html' %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Classroom</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Classroom</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Classroom List</h3>
+      </div>
+      <div class="card-header">
+        {% if request.user.id != request.teacherprofile.user_id %}
+         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#staticBackdrop">ADD</button>
+         {% endif %}
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Classroom Name</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Teacher Assigned</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody> 
+            {% for classroom in classroomlist %}
+              <tr>
+                <td>{{ classroom.id }}</td>
+                <td>{{ classroom.classroom_name }}</td>
+                <td>{{ classroom.classroom_description }}</td>
+                <td>
+                  {% if classroom.classroom_status == 'Unavailable' %}
+                    <span class="badge bg-danger">{{ classroom.classroom_status }}</span>
+                  {% elif classroom.classroom_status == 'Available' %}
+                    <span class="badge bg-success">{{ classroom.classroom_status }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ classroom.teacher }}</td>
+                <td>
+
+                  
+                  {% if request.user.id != request.teacherprofile.user_id %}
+                  <a title="Edit" href="{% url 'show-classroominfo' classroom.id %}" class="btn btn-secondary">
+                    <i class="align-middle me-0 fas fa-edit"></i>
+                  </a>
+                  {% endif %}
+
+
+                  <a title="Start Listen" href="{% url 'show-start-listen-page' classroom.id %}" class="btn btn-danger">
+                    <i class="align-middle me-0 fas fa-assistive-listening-systems"> Start Listen</i>
+                  </a>
+
+                  
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <!-- Modal Add -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Add Event</h5>
+        <button type="button" class="btn btn-tool" data-dismiss="modal">
+                <i class="fas fa-times"></i>
+        </button>
+          </div>
+          <form action="{% url 'add-classroom' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %} 
+            <div class="modal-body">
+              {{cform.as_p}}
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- END Modal -->
+
+
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper --> 
+
+ <style>
+    .disabled-link {
+    color: #black; /* Set the text color to a grayish tone */
+    pointer-events: none; /* Disable pointer events to make it unclickable */
+    opacity: 0.6; /* Set opacity to visually indicate it's disabled */
+    cursor: not-allowed; /* Change the cursor to indicate it's not clickable */
+}
+  </style>
+
+   <script>
+    $(document).ready(function(){
+        $(".disabled-link").click(function(e){
+            e.preventDefault(); // Prevent the default click action
+        });
+    });
+</script>
+
+{% endblock %}

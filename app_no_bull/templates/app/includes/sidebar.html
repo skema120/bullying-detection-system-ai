@@ -1,0 +1,156 @@
+{% load static %}
+
+<aside class="main-sidebar sidebar-dark-primary sidebar-light-lime bg-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="{% url 'home' %}" class="brand-link" style="
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    background-image: url('{% static 'webs/dist/img/logo.png' %}'); 
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-position: center;
+    height: 100px;  /* Adjust height as needed */
+">
+    <span class="brand-text font-weight-light" 
+        style="color: white; font-size: 18px; font-weight: bold; text-align: center; background: rgba(0, 0, 0, 0.5); padding: 5px; border-radius: 5px;">
+        BULLYING DETECTION<br> SYSTEM
+    </span>
+</a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% static 'webs/dist/img/user.png' %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+          {% if request.user.is_authenticated %}    
+          {% if request.student or request.user %}
+        <div class="info">
+          <a href="#" class="d-block">{{ request.user.first_name }} {{ request.user.last_name }}
+            {{ request.student.student_first_name }} {{ request.student.student_last_name }}
+            {{ request.teacher.teacher_first_name }} {{ request.teacher.teacher_last_name }}
+            {% else %}
+              No Student Profile Found
+            {% endif %}
+          </a>
+        </div>
+          {% endif %}
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          
+
+          
+
+
+          <li class="nav-header">Pages</li>
+
+          <!-- <li class="nav-item">
+            <a href="{% url 'students' %}" class="nav-link">
+              <i class="nav-icon fas fa-solid fa-graduation-cap"></i>
+              <p>
+                Students
+              </p>
+            </a>
+          </li> -->
+          {% if request.user.id != request.teacherprofile.user_id %}
+           <li class="nav-item">
+            <a href="{% url 'teachers' %}" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Teachers
+              </p>
+            </a>
+          </li>
+
+          {% endif %}
+          <li class="nav-item">
+            <a href="{% url 'classrooms' %}" class="nav-link">
+              <i class="nav-icon fas fa-school"></i>
+              <p>
+                Classroom
+              </p>
+            </a>
+          </li>
+
+         
+          
+
+          
+         
+          
+         
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                Settings
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              {% if request.user.id != request.studentprofile.user_id %}
+              
+              {% if user.is_superuser %}
+
+              <li class="nav-item">
+                <a href="{% url 'users' %}" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Users</p>
+                </a>
+              </li>
+
+
+              <!-- <li class="nav-item">
+                <a href="{% url 'import_students' %}" class="nav-link">
+                  <i class="fas fa-file-import nav-icon"></i>
+                  <p>Import Students Data Excel</p>
+                </a>
+              </li> -->
+              {% endif %}
+
+              {% endif %}
+              <li class="nav-item">
+                <a href="{% url 'change-password' %}" class="nav-link">
+                  <i class="fas fa-lock nav-icon"></i>
+                  <p>Change Password</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>

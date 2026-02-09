@@ -1,0 +1,262 @@
+{% extends 'app/includes/base.html' %}
+{% load static %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Bullying Events</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Bullying Events</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Events List</h3>
+      </div>
+      <div class="card-header">
+        <h5 class="card-item">Teacher: 
+            {% if teacher_info %}
+                {{ teacher_info }}
+            {% else %}
+                No Teacher Assigned
+            {% endif %}
+        </h5>
+        <h5 class="card-item">Classroom: {{classroom_info.classroom_name}}</h3>
+
+        <button type="button" class="btn btn-primary" onclick="window.location.href='{% url "classrooms" %}'">&nbsp;BACK&nbsp;</button>
+
+         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#staticBackdrop">START LISTENING</button>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Detected Speech</th>
+              <th>Timestamp</th>
+              <th>Classroom</th>
+              <th>Audio Clip</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody> 
+            {% for bullyingevent in bullyingeventlist %}
+              <tr>
+                <td>{{ bullyingevent.id }}</td>
+                <td>{{ bullyingevent.detected_speech }}</td>
+                <td>{{ bullyingevent.timestamp }}</td>
+                <td>{{ bullyingevent.classroom }}</td>
+                <td>{{ bullyingevent.audio_clip_path }}</td>
+                <td>
+
+                  <a title="Play Audio Clip" href="#" class="btn btn-warning play-audio" data-audio-path="{% static bullyingevent.audio_clip_path %}">
+                      <i class="align-middle me-0 fas fa-play"></i>
+                  </a>
+
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <!-- Modal Add -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Start Listening</h5>
+                    <button type="button" class="btn btn-tool" data-dismiss="modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Click the button below to start listening for bullying speech in this classroom.</p>
+                    <div id="message-area" style="height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9;">
+                        <!-- Messages will be displayed here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="start-listening-btn">Start Listening</button>
+                    <button type="button" class="btn btn-danger" id="stop-listening-btn">Stop Listening</button>
+                    <button type="button" class="btn btn-warning" id="clear-messages-btn">Clear Messages</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Modal -->
+
+    <!-- Audio Player Modal -->
+    <div class="modal fade" id="audioPlayerModal" tabindex="-1" aria-labelledby="audioPlayerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="audioPlayerModalLabel">Play Audio Clip</h5>
+                    <button type="button" class="btn btn-tool" data-dismiss="modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <audio id="audioPlayer" controls>
+                        <source id="audioSource" src="" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Audio Player Modal -->
+
+
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper --> 
+
+ <style>
+    .disabled-link {
+    color: #black; /* Set the text color to a grayish tone */
+    pointer-events: none; /* Disable pointer events to make it unclickable */
+    opacity: 0.6; /* Set opacity to visually indicate it's disabled */
+    cursor: not-allowed; /* Change the cursor to indicate it's not clickable */
+}
+  </style>
+
+<script>
+    $(document).ready(function() {
+        let pollingInterval;
+
+        $('#start-listening-btn').click(function() {
+            const classroomId = {{ classroom_info.id }}; // Assuming classroom_info is passed to the template
+            $.ajax({
+                url: `/start-listening/${classroomId}/`,
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                },
+                success: function(response) {
+                    appendMessage(response.message); // Show success message using toastr
+                    startPolling(); // Start polling for messages
+                    toastr.success(response.message); // Show success message using toastr
+                },
+                error: function(xhr) {
+                    appendMessage(xhr.responseJSON.message); // Show error message using toastr
+                }
+            });
+        });
+
+        $('#stop-listening-btn').click(function() {
+            $.ajax({
+                url: '/stop-listening/',
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                },
+                success: function(response) {
+                    appendMessage(response.message); // Show success message using toastr
+                    stopPolling(); // Stop polling for messages
+                    toastr.error(response.message); // Show success message using toastr
+                },
+                error: function(xhr) {
+                    appendMessage(xhr.responseJSON.message); // Show error message using toastr
+                }
+            });
+        });
+
+        $('#clear-messages-btn').click(function() {
+            $.ajax({
+                url: '/clear-messages/', // Endpoint to clear messages
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                },
+                success: function(response) {
+                    $('#message-area').empty(); // Clear the messages displayed in the modal
+                    appendMessage(response.message); // Show success message
+                    toastr.warning(response.message); // Show success message using toastr
+                },
+                error: function(xhr) {
+                    appendMessage(xhr.responseJSON.message); // Show error message
+                }
+            });
+        });
+
+
+        $('.play-audio').click(function() {
+            const audioPath = $(this).data('audio-path'); // Get the audio path from the data attribute
+            $('#audioSource').attr('src', audioPath); // Set the audio source
+            $('#audioPlayer')[0].load(); // Load the new audio source
+            $('#audioPlayerModal').modal('show'); // Show the audio player modal
+        });
+
+
+        function startPolling() {
+            pollingInterval = setInterval(function() {
+                $.ajax({
+                    url: '/get-messages/', // Endpoint to get current messages
+                    type: 'GET',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for security
+                    },
+                    success: function(response) {
+                        appendMessages(response.messages); // Append messages to the modal
+                    },
+                    error: function(xhr) {
+                        console.error("Error fetching messages:", xhr);
+                    }
+                });
+            }, 2000); // Poll every 2 seconds
+        }
+
+        function stopPolling() {
+            clearInterval(pollingInterval); // Stop the polling
+        }
+
+        function appendMessages(messages) {
+            $('#message-area').empty(); // Clear previous messages
+            messages.forEach(function(message) {
+                $('#message-area').append('<div>' + message + '</div>');
+            });
+            $('#message-area').scrollTop($('#message-area')[0].scrollHeight); // Scroll to the bottom
+        }
+
+        function appendMessage(message) {
+            $('#message-area').append('<div>' + message + '</div>');
+            $('#message-area').scrollTop($('#message-area')[0].scrollHeight); // Scroll to the bottom
+        }
+    });
+</script>
+
+   <script>
+    $(document).ready(function(){
+        $(".disabled-link").click(function(e){
+            e.preventDefault(); // Prevent the default click action
+        });
+    });
+</script>
+
+{% endblock %}
