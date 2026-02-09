@@ -1,4 +1,4 @@
-# Bullying Detection System using AI
+ # Bullying Detection System using AI
 
 A proactive safety monitoring system built with Python and Django. This application utilizes **Artificial Intelligence (OpenAI)** and **Speech Recognition** to detect, analyze, and log verbal bullying incidents in real-time within a classroom environment.
 
@@ -30,7 +30,7 @@ A proactive safety monitoring system built with Python and Django. This applicat
 
 | **Teacher Interface** | **Login Portal** |
 |:---:|:---:|
-| ![Teacher](screenshots/teacher/TEACHER%20-%20Dashboard%201.png) | ![Login](LOGIN.png) |
+| ![Teacher](screenshots/teacher/TEACHER%20-%20Dashboard.png) | ![Login](screenshots/LOGIN.png) |
 
 ## 🛠️ Technology Stack
 
