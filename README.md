@@ -30,7 +30,7 @@ A proactive safety monitoring system built with Python and Django. This applicat
 
 | **Teacher Interface** | **Login Portal** |
 |:---:|:---:|
-| ![Teacher](screenshots/teacher/TEACHER%20-%20Dashboard.png) | ![Login](screenshots/LOGIN.png) |
+| ![Teacher](screenshots/teacher/TEACHER%20-%20Dashboard.png) | ![Login](screenshots/Login.png) |
 
 ## 🛠️ Technology Stack
 
